@@ -41,10 +41,7 @@
     "autoload-dev": {
         "psr-4": {
             "tests\\": "tests/"
-        },
-        "files": [
-            "config/__autocomplete.php"
-        ]
+        }
     },
     "config": {
         "allow-plugins": {
