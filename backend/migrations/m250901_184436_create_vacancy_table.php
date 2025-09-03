@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles adding status to table `{{%vacancy}}`.
  */
-class m241201_000001_add_status_to_vacancy_table extends Migration
+class m250901_184435_create_vacancy_table extends Migration
 {
     /**
      * {@inheritdoc}
