@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS Test</title>
+</head>
+<body>
+    <h1>CORS Test для API</h1>
+    <button id="testStats">Тест статистики</button>
+    <button id="testVacancies">Тест списка вакансий</button>
+    <div id="result"></div>
+
+    <script>
+        const API_BASE = 'http://api.test29.test'; // Замените на ваш хост
+
+        document.getElementById('testStats').addEventListener('click', async () => {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/vacancy/stats`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                const data = await response.json();
+                document.getElementById('result').innerHTML = 
+                    '<h3>Статистика:</h3><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    '<h3>Ошибка:</h3><p>' + error.message + '</p>';
+            }
+        });
+
+        document.getElementById('testVacancies').addEventListener('click', async () => {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/vacancy`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                const data = await response.json();
+                document.getElementById('result').innerHTML = 
+                    '<h3>Вакансии:</h3><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    '<h3>Ошибка:</h3><p>' + error.message + '</p>';
+            }
+        });
+    </script>
+</body>
+</html>
+
