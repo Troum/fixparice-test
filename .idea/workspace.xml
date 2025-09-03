@@ -4,44 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d90fac85-63f3-4739-92cd-db51f29dd3d0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEPLOYMENT.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MANUAL_DEPLOYMENT.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.dockerignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/Dockerfile.dev" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/docker-compose.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/docker/default.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/docker/nginx.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.dev.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.mariadb.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.monitoring.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.prod.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/env.example" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/env.prod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitoring/loki/loki.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitoring/prometheus/prometheus.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitoring/promtail/promtail.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx/default.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx/nginx.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx/prod.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx/sites-available/vacancy.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/redis/redis.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/backup.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/deploy.sh" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/deploy.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/fix-env.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/fix-frontend.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/fix-psr4.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/manual-deploy.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/monitor.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/update.sh" beforeDir="false" />
-    </list>
+    <list default="true" id="d90fac85-63f3-4739-92cd-db51f29dd3d0" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -257,7 +220,7 @@
       <workItem from="1756752839771" duration="9385000" />
       <workItem from="1756810425981" duration="3839000" />
       <workItem from="1756815080069" duration="26909000" />
-      <workItem from="1756862925835" duration="8387000" />
+      <workItem from="1756862925835" duration="9185000" />
     </task>
     <servers />
   </component>
