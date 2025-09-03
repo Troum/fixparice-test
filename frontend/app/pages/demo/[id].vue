@@ -39,7 +39,7 @@ onMounted(() => {
 })
 
 const editVacancy = () => {
-  router.push(`/demo/edit/${id}`)
+  router.push(`/demo/${id}/edit`)
 }
 
 const deleteVacancy = () => {

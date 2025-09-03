@@ -170,7 +170,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
             [{
               label: "Редактировать",
               icon: "i-lucide-edit",
-              onClick: () => router.push(`/demo/edit/${row.getValue("id")}`)
+              onClick: () => router.push(`/demo/${row.getValue("id")}/edit`)
             }],
             [{
               label: row.getValue("status") ? "Архивировать" : "Разархивировать",

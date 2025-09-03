@@ -54,7 +54,7 @@ watchEffect(() => {
 })
 
 const editVacancy = () => {
-  router.push(`/jobs/edit/${id}`)
+  router.push(`/jobs/${id}/edit`)
 }
 
 const deleteVacancy = () => {

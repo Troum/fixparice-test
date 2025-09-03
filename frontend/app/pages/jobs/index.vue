@@ -134,7 +134,7 @@ const columns: TableColumn<object>[] = [
         items.push([{
           label: 'Редактировать',
           icon: 'i-lucide-edit',
-          onClick: () => router.push(`/jobs/edit/${row.getValue('id')}`)
+          onClick: () => router.push(`/jobs/${row.getValue('id')}/edit`)
         }])
       }
 

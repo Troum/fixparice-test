@@ -66,7 +66,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       }
     };
     const editVacancy = () => {
-      router.push(`/demo/edit/${id}`);
+      router.push(`/demo/${id}/edit`);
     };
     const deleteVacancy = () => {
       confirm(
