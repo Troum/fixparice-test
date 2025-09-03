@@ -3,19 +3,24 @@
 namespace app\commands;
 
 use app\models\UserEntity;
+use Exception;
 use Yii;
 use yii\console\Controller;
 use yii\console\ExitCode;
-use yii\helpers\Console;
+use yii\helpers\BaseConsole;
 
 class RbacController extends Controller
 {
+    /**
+     * @return int
+     * @throws Exception
+     */
     public function actionInit(): int
     {
         $auth = Yii::$app->authManager;
         $auth->removeAll();
 
-        $this->stdout("Инициализация RBAC системы...\n", Console::FG_GREEN);
+        $this->stdout("Инициализация RBAC системы...\n", BaseConsole::FG_GREEN);
 
         $createVacancy = $auth->createPermission('createVacancy');
         $createVacancy->description = 'Создание вакансий';
@@ -66,71 +71,80 @@ class RbacController extends Controller
         $auth->addChild($admin, $manager);
         $auth->addChild($admin, $manageUsers);
 
-        $this->stdout("✓ Роли и разрешения созданы\n", Console::FG_GREEN);
+        $this->stdout("✓ Роли и разрешения созданы\n", BaseConsole::FG_GREEN);
 
         $adminUser = UserEntity::findByEmail('admin@example.com');
         if ($adminUser) {
             $auth->assign($admin, $adminUser->id);
-            $this->stdout("✓ Роль admin назначена пользователю admin@example.com\n", Console::FG_GREEN);
+            $this->stdout("✓ Роль admin назначена пользователю admin@example.com\n", BaseConsole::FG_GREEN);
         }
 
         $demoUser = UserEntity::findByEmail('demo@example.com');
         if ($demoUser) {
             $auth->assign($editor, $demoUser->id);
-            $this->stdout("✓ Роль editor назначена пользователю demo@example.com\n", Console::FG_GREEN);
+            $this->stdout("✓ Роль editor назначена пользователю demo@example.com\n", BaseConsole::FG_GREEN);
         }
 
         $testUser = UserEntity::findByEmail('test@example.com');
         if ($testUser) {
             $auth->assign($viewer, $testUser->id);
-            $this->stdout("✓ Роль viewer назначена пользователю test@example.com\n", Console::FG_GREEN);
+            $this->stdout("✓ Роль viewer назначена пользователю test@example.com\n", BaseConsole::FG_GREEN);
         }
 
-        $this->stdout("\nRBAC система инициализирована успешно!\n", Console::FG_GREEN);
-        $this->stdout("\nРоли:\n", Console::FG_YELLOW);
-        $this->stdout("• admin - Полный доступ ко всем функциям\n", Console::FG_CYAN);
-        $this->stdout("• manager - Управление вакансиями + статистика\n", Console::FG_CYAN);
-        $this->stdout("• editor - Создание и редактирование вакансий\n", Console::FG_CYAN);
-        $this->stdout("• viewer - Только просмотр вакансий\n", Console::FG_CYAN);
+        $this->stdout("\nRBAC система инициализирована успешно!\n", BaseConsole::FG_GREEN);
+        $this->stdout("\nРоли:\n", BaseConsole::FG_YELLOW);
+        $this->stdout("• admin - Полный доступ ко всем функциям\n", BaseConsole::FG_CYAN);
+        $this->stdout("• manager - Управление вакансиями + статистика\n", BaseConsole::FG_CYAN);
+        $this->stdout("• editor - Создание и редактирование вакансий\n", BaseConsole::FG_CYAN);
+        $this->stdout("• viewer - Только просмотр вакансий\n", BaseConsole::FG_CYAN);
 
         return ExitCode::OK;
     }
 
+    /**
+     * @param string $role
+     * @param string $email
+     * @return int
+     * @throws Exception
+     */
     public function actionAssign(string $role, string $email): int
     {
         $auth = Yii::$app->authManager;
         $user = UserEntity::findByEmail($email);
 
         if (!$user) {
-            $this->stdout("Пользователь с email '{$email}' не найден\n", Console::FG_RED);
+            $this->stdout("Пользователь с email '{$email}' не найден\n", BaseConsole::FG_RED);
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
         $roleObj = $auth->getRole($role);
         if (!$roleObj) {
-            $this->stdout("Роль '{$role}' не найдена\n", Console::FG_RED);
+            $this->stdout("Роль '{$role}' не найдена\n", BaseConsole::FG_RED);
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
         $auth->revokeAll($user->id);
         $auth->assign($roleObj, $user->id);
 
-        $this->stdout("✓ Роль '{$role}' назначена пользователю '{$email}'\n", Console::FG_GREEN);
+        $this->stdout("✓ Роль '{$role}' назначена пользователю '{$email}'\n", BaseConsole::FG_GREEN);
         return ExitCode::OK;
     }
 
+    /**
+     * @return int
+     */
     public function actionList(): int
     {
         $auth = Yii::$app->authManager;
-        
-        $this->stdout("Роли в системе:\n", Console::FG_GREEN);
+
+        $this->stdout("Роли в системе:\n", BaseConsole::FG_GREEN);
         foreach ($auth->getRoles() as $role) {
-            $this->stdout("• {$role->name} - {$role->description}\n", Console::FG_CYAN);
+            $this->stdout("• {$role->name} - {$role->description}\n", BaseConsole::FG_CYAN);
         }
 
-        $this->stdout("\nРазрешения в системе:\n", Console::FG_GREEN);
+        $this->stdout("\nРазрешения в системе:\n", BaseConsole::FG_GREEN);
         foreach ($auth->getPermissions() as $permission) {
-            $this->stdout("• {$permission->name} - {$permission->description}\n", Console::FG_CYAN);
+            $this->stdout("• {$permission->name} - {$permission->description}\n", BaseConsole::FG_CYAN);
         }
 
         return ExitCode::OK;

@@ -116,6 +116,7 @@ class SeedController extends Controller
 
     /**
      * @return int
+     * @throws BaseException
      * @throws Exception
      */
     public function actionAll(): int
@@ -184,6 +185,8 @@ class SeedController extends Controller
      * @param string $email
      * @param string $password
      * @return int
+     * @throws BaseException
+     * @throws Exception
      */
     public function actionResetPassword(string $email, string $password): int
     {

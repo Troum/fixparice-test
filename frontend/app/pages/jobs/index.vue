@@ -51,7 +51,7 @@ const columns: TableColumn<object>[] = [
         label: 'Название',
         icon: isSorted ? (isSorted === 'asc' ? 'i-lucide-arrow-up-narrow-wide' : 'i-lucide-arrow-down-wide-narrow') : 'i-lucide-arrow-up-down',
         class: '-mx-2.5',
-        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
+        ononClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
       })
     },
     cell: ({row}) => h('div', {class: 'font-medium'}, row.getValue('title'))
@@ -66,7 +66,7 @@ const columns: TableColumn<object>[] = [
         label: 'Зарплата',
         icon: isSorted ? (isSorted === 'asc' ? 'i-lucide-arrow-up-narrow-wide' : 'i-lucide-arrow-down-wide-narrow') : 'i-lucide-arrow-up-down',
         class: '-mx-2.5',
-        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
+        ononClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
       })
     },
     cell: ({row}) => {
@@ -107,7 +107,7 @@ const columns: TableColumn<object>[] = [
         label: 'Дата создания',
         icon: isSorted ? (isSorted === 'asc' ? 'i-lucide-arrow-up-narrow-wide' : 'i-lucide-arrow-down-wide-narrow') : 'i-lucide-arrow-up-down',
         class: '-mx-2.5',
-        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
+        ononClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
       })
     },
     cell: ({row}) => {
@@ -126,7 +126,7 @@ const columns: TableColumn<object>[] = [
       items.push([{
         label: 'Просмотреть',
         icon: 'i-lucide-eye',
-        click: () => router.push(`/jobs/${row.getValue('id')}`)
+        onClick: () => router.push(`/jobs/${row.getValue('id')}`)
       }])
 
       // Редактирование (если есть права)
@@ -134,7 +134,7 @@ const columns: TableColumn<object>[] = [
         items.push([{
           label: 'Редактировать',
           icon: 'i-lucide-edit',
-          click: () => router.push(`/jobs/${row.getValue('id')}/edit`)
+          onClick: () => router.push(`/jobs/${row.getValue('id')}/edit`)
         }])
       }
 
@@ -145,7 +145,7 @@ const columns: TableColumn<object>[] = [
         dangerousActions.push({
           label: 'Архивировать',
           icon: 'i-lucide-archive',
-          click: () => {
+          onClick: () => {
             confirm(
               'Архивирование вакансии',
               `Вы уверены, что хотите архивировать вакансию "${row.getValue('title')}"?`,
@@ -176,7 +176,7 @@ const columns: TableColumn<object>[] = [
         dangerousActions.push({
           label: 'Удалить',
           icon: 'i-lucide-trash',
-          click: () => {
+          onClick: () => {
             confirm(
               'Удаление вакансии',
               `Вы уверены, что хотите удалить вакансию "${row.getValue('title')}"? Это действие нельзя отменить.`,
