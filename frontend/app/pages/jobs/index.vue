@@ -154,7 +154,6 @@ const columns: TableColumn<object>[] = [
                     await updateVacancy(row.getValue('id'), { ...row.original, status: row.getValue('status') ? 0 : 1 })
                     await fetchVacancies()
                         .then(() => {
-
                           toast.add({
                             title: row.getValue('status') ? 'Архивировано' : 'Разархивировано',
                             description: `Вакансия ${row.getValue('status') ? 'заархивирована' : 'разархивирована'}`,
