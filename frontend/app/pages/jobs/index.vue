@@ -4,6 +4,7 @@ import type {TableColumn} from '@nuxt/ui'
 import { useApi } from '~/composable/useApi'
 import { useConfirm } from '~/composable/useConfirm'
 import { useRbac } from '~/composable/useRbac'
+import type {SuccessResponse} from "~/interfaces/SuccessResponse";
 
 const route = useRoute()
 const router = useRouter()
@@ -162,6 +163,9 @@ const columns: TableColumn<object>[] = [
                         })
                         .then(async () => {
                           await getVacanciesStats()
+                              .then((response: any) => {
+                                stats.value = response
+                              })
                         })
 
                   } catch (error) {

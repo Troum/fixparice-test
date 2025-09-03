@@ -154,6 +154,9 @@ const columns: TableColumn<object>[] = [
                       })
                       .then(async () => {
                         await getVacanciesStats()
+                            .then((response: any) => {
+                              stats.value = response
+                            })
                       })
 
                 } catch (error) {
