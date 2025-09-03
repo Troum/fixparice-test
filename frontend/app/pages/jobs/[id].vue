@@ -54,7 +54,7 @@ watchEffect(() => {
 })
 
 const editVacancy = () => {
-  router.push(`/jobs/${id}/edit`)
+  router.push(`/jobs/edit/${id}`)
 }
 
 const deleteVacancy = () => {
@@ -95,8 +95,8 @@ const getStatusText = (status: number) => {
   return status === 1 ? 'Активная' : 'Архивная'
 }
 
-const getStatusColor = (status: number) => {
-  return status === 1 ? 'success' : 'gray'
+const getStatusColor = (status: number): 'success' | 'neutral' => {
+  return status === 1 ? 'success' : 'neutral'
 }
 </script>
 
@@ -129,7 +129,7 @@ const getStatusColor = (status: number) => {
           </div>
           <h3 class="text-lg font-semibold text-red-700 mb-2">Ошибка загрузки</h3>
           <p class="text-gray-600 mb-4">Не удалось загрузить информацию о вакансии</p>
-          <UButton @click="fetchVacancy" color="red" variant="outline">
+          <UButton @click="fetchVacancy" color="error" variant="outline">
             Попробовать снова
           </UButton>
         </div>
@@ -160,7 +160,7 @@ const getStatusColor = (status: number) => {
               <UButton
                 v-if="canUpdateVacancies"
                 icon="i-lucide-edit"
-                color="blue"
+                color="info"
                 variant="outline"
                 @click="editVacancy"
               >
@@ -169,7 +169,7 @@ const getStatusColor = (status: number) => {
               <UButton
                 v-if="canDeleteVacancies"
                 icon="i-lucide-trash"
-                color="red"
+                color="error"
                 variant="outline"
                 @click="deleteVacancy"
               >
@@ -229,8 +229,8 @@ const getStatusColor = (status: number) => {
               </label>
               <USelect
                 v-model="expandFields"
-                :options="[
-                  { label: 'Только основные поля', value: '' },
+                placeholder="Только основные поля"
+                :items="[
                   { label: 'С датами создания и обновления', value: 'created_at,updated_at' },
                   { label: 'Только дата создания', value: 'created_at' },
                   { label: 'Только дата обновления', value: 'updated_at' }

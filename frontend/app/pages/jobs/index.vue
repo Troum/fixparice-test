@@ -51,7 +51,7 @@ const columns: TableColumn<object>[] = [
         label: 'Название',
         icon: isSorted ? (isSorted === 'asc' ? 'i-lucide-arrow-up-narrow-wide' : 'i-lucide-arrow-down-wide-narrow') : 'i-lucide-arrow-up-down',
         class: '-mx-2.5',
-        ononClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
       })
     },
     cell: ({row}) => h('div', {class: 'font-medium'}, row.getValue('title'))
@@ -66,7 +66,7 @@ const columns: TableColumn<object>[] = [
         label: 'Зарплата',
         icon: isSorted ? (isSorted === 'asc' ? 'i-lucide-arrow-up-narrow-wide' : 'i-lucide-arrow-down-wide-narrow') : 'i-lucide-arrow-up-down',
         class: '-mx-2.5',
-        ononClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
       })
     },
     cell: ({row}) => {
@@ -107,7 +107,7 @@ const columns: TableColumn<object>[] = [
         label: 'Дата создания',
         icon: isSorted ? (isSorted === 'asc' ? 'i-lucide-arrow-up-narrow-wide' : 'i-lucide-arrow-down-wide-narrow') : 'i-lucide-arrow-up-down',
         class: '-mx-2.5',
-        ononClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
       })
     },
     cell: ({row}) => {
@@ -122,7 +122,6 @@ const columns: TableColumn<object>[] = [
     cell: ({row}) => {
       const items = []
 
-      // Всегда доступный просмотр
       items.push([{
         label: 'Просмотреть',
         icon: 'i-lucide-eye',
@@ -134,7 +133,7 @@ const columns: TableColumn<object>[] = [
         items.push([{
           label: 'Редактировать',
           icon: 'i-lucide-edit',
-          onClick: () => router.push(`/jobs/${row.getValue('id')}/edit`)
+          onClick: () => router.push(`/jobs/edit/${row.getValue('id')}`)
         }])
       }
 
@@ -143,30 +142,37 @@ const columns: TableColumn<object>[] = [
 
       if (canUpdateVacancies.value) {
         dangerousActions.push({
-          label: 'Архивировать',
+          label: row.getValue('status') ? 'Архивировать' : 'Разархивировать',
           icon: 'i-lucide-archive',
           onClick: () => {
             confirm(
-              'Архивирование вакансии',
-              `Вы уверены, что хотите архивировать вакансию "${row.getValue('title')}"?`,
-              'Архивировать',
-              async () => {
-                try {
-                  await updateVacancy(row.getValue('id'), { ...row.original, status: 0 })
-                  toast.add({
-                    title: 'Архивировано',
-                    description: 'Вакансия архивирована',
-                    color: 'success'
-                  })
-                  await fetchVacancies()
-                } catch (error) {
-                  toast.add({
-                    title: 'Ошибка',
-                    description: 'Не удалось архивировать',
-                    color: 'error'
-                  })
+                'Архивирование вакансии',
+                `Вы уверены, что хотите ${row.getValue('status') ? 'архивировать' : 'разархивировать'} вакансию "${row.getValue('title')}"?`,
+                row.getValue('status') ? 'Архивировать' : 'Разархивировать',
+                async () => {
+                  try {
+                    await updateVacancy(row.getValue('id'), { ...row.original, status: row.getValue('status') ? 0 : 1 })
+                    await fetchVacancies()
+                        .then(() => {
+
+                          toast.add({
+                            title: row.getValue('status') ? 'Архивировано' : 'Разархивировано',
+                            description: `Вакансия ${row.getValue('status') ? 'заархивирована' : 'разархивирована'}`,
+                            color: 'success'
+                          })
+                        })
+                        .then(async () => {
+                          await getVacanciesStats()
+                        })
+
+                  } catch (error) {
+                    toast.add({
+                      title: 'Ошибка',
+                      description: 'Не удалось архивировать',
+                      color: 'error'
+                    })
+                  }
                 }
-              }
             )
           }
         })
