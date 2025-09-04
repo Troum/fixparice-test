@@ -1,27 +1,31 @@
 <script setup lang="ts">
-import { useApi } from '~/composable/useApi'
-import JobForm from '~/components/JobForm.vue'
+import type { VacancyInterface, VacancyFormData } from '~/interfaces/VacancyInterface'
+import {useApi} from "~/composable/useApi";
+
+useHead({
+  title: 'Редактирование вакансии'
+})
 
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 const { getVacancy, updateVacancy } = useApi()
 
-const id = route.params.id as string
+const id = parseInt(route.params.id as string)
 
-const vacancy = ref()
+const vacancy = ref<VacancyInterface | null>(null)
 const loading = ref(false)
 const fetchLoading = ref(true)
-const error = ref(null)
+const error = ref<string | null>(null)
 
 const fetchVacancy = async () => {
   fetchLoading.value = true
   error.value = null
 
   try {
-    vacancy.value = await getVacancy(id)
+    vacancy.value = await getVacancy(id) as VacancyInterface
   } catch (err: any) {
-    error.value = err
+    error.value = err.message || 'Не удалось загрузить вакансию'
     toast.add({
       title: 'Ошибка',
       description: 'Не удалось загрузить данные вакансии',
@@ -32,7 +36,7 @@ const fetchVacancy = async () => {
   }
 }
 
-const handleSubmit = async (formData: any) => {
+const handleSubmit = async (formData: VacancyFormData) => {
   loading.value = true
 
   try {
@@ -50,7 +54,6 @@ const handleSubmit = async (formData: any) => {
 
     let errorMessage = 'Не удалось обновить вакансию'
 
-    // Обработка ошибок валидации
     if (error.data && error.data.errors) {
       const errors = error.data.errors
       if (Array.isArray(errors)) {
@@ -70,7 +73,6 @@ const handleSubmit = async (formData: any) => {
   }
 }
 
-// Обработка отмены
 const handleCancel = () => {
   router.push(`/jobs/${id}`)
 }
@@ -86,17 +88,13 @@ watchEffect(() => {
     useHead({
       title: `Редактирование: ${vacancy.value.title}`
     })
-  } else {
-    useHead({
-      title: 'Редактирование вакансии'
-    })
   }
 })
 </script>
 
 <template>
   <div class="min-h-screen p-4">
-    <div class="max-w-2xl mx-auto">
+    <div class="max-w-4xl mx-auto">
       <!-- Навигация -->
       <div class="mb-6">
         <UButton
@@ -109,11 +107,10 @@ watchEffect(() => {
       </div>
 
       <!-- Загрузка -->
-      <InlineLoading
-        v-if="fetchLoading"
-        message="Загрузка данных вакансии"
-        size="lg"
-      />
+      <div v-if="fetchLoading" class="text-center py-12">
+        <UIcon name="i-lucide-loader-2" class="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
+        <p class="text-gray-600">Загрузка данных вакансии...</p>
+      </div>
 
       <!-- Ошибка загрузки -->
       <UCard v-else-if="error" class="border-red-200">
@@ -122,9 +119,9 @@ watchEffect(() => {
             <UIcon name="i-lucide-alert-circle" class="w-12 h-12 mx-auto" />
           </div>
           <h3 class="text-lg font-semibold text-red-700 mb-2">Ошибка загрузки</h3>
-          <p class="text-gray-600 mb-4">Не удалось загрузить данные вакансии для редактирования</p>
+          <p class="text-gray-600 mb-4">{{ error }}</p>
           <div class="space-x-2">
-            <UButton @click="fetchVacancy" color="red" variant="outline">
+            <UButton @click="fetchVacancy" color="error" variant="outline">
               Попробовать снова
             </UButton>
             <UButton @click="router.push('/jobs')" variant="ghost">
@@ -136,10 +133,9 @@ watchEffect(() => {
 
       <!-- Форма редактирования -->
       <div v-else-if="vacancy">
-        <JobForm
-          :initial-data="vacancy"
+        <VacancyForm
+          :vacancy="vacancy"
           :loading="loading"
-          is-edit
           @submit="handleSubmit"
           @cancel="handleCancel"
         />

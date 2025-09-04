@@ -3,16 +3,17 @@ import {h} from 'vue'
 import type {TableColumn} from '@nuxt/ui'
 import { useApi } from '~/composable/useApi'
 import { useConfirm } from '~/composable/useConfirm'
-import { useDemo } from '~/composable/useDemo'
 import { useRbac } from '~/composable/useRbac'
+import type {SuccessResponse} from "~/interfaces/SuccessResponse";
+import {useDemo} from "~/composable/useDemo";
 
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 const { usePaginatedData, getVacanciesStats, deleteVacancy, updateVacancy } = useApi()
 const { confirm } = useConfirm()
+const { canCreateVacancies, canUpdateVacancies, canDeleteVacancies, canViewStats } = useRbac()
 const { isDemoUser, getDemoNotification } = useDemo()
-const { canCreateVacancies} = useRbac()
 
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
@@ -21,7 +22,7 @@ const page = ref(Number(route.query.page ?? 1))
 const sort = ref(String(route.query.sort ?? '-created_at'))
 const perPage = 10
 
-const { data, pending, error, fetchData, items, meta } = usePaginatedData('vacancies', true)
+const { pending, fetchData, items, meta } = usePaginatedData('vacancies', true)
 
 const fetchVacancies = async () => {
   await fetchData({
@@ -122,57 +123,71 @@ const columns: TableColumn<object>[] = [
   {
     id: 'actions',
     cell: ({row}) => {
-      const items = [
-            [{
-              label: 'Просмотреть',
-              icon: 'i-lucide-eye',
-              onClick: () => router.push(`/demo/${row.getValue('id')}`)
-            }],
-            [{
-              label: 'Редактировать',
-              icon: 'i-lucide-edit',
-              onClick: () => router.push(`/demo/${row.getValue('id')}/edit`)
-            }],
-        [{
+      const items = []
+
+      items.push([{
+        label: 'Просмотреть',
+        icon: 'i-lucide-eye',
+        onClick: () => router.push(`/demo/${row.getValue('id')}`)
+      }])
+
+      // Редактирование (если есть права)
+      if (canUpdateVacancies.value) {
+        items.push([{
+          label: 'Редактировать',
+          icon: 'i-lucide-edit',
+          onClick: () => router.push(`/demo/${row.getValue('id')}/edit`)
+        }])
+      }
+
+      // Опасные действия (архивирование и удаление)
+      const dangerousActions = []
+
+      if (canUpdateVacancies.value) {
+        dangerousActions.push({
           label: row.getValue('status') ? 'Архивировать' : 'Разархивировать',
           icon: 'i-lucide-archive',
           onClick: () => {
             confirm(
-              'Архивирование вакансии',
-              `Вы уверены, что хотите ${row.getValue('status') ? 'архивировать' : 'разархивировать'} вакансию "${row.getValue('title')}"?`,
+                'Архивирование вакансии',
+                `Вы уверены, что хотите ${row.getValue('status') ? 'архивировать' : 'разархивировать'} вакансию "${row.getValue('title')}"?`,
                 row.getValue('status') ? 'Архивировать' : 'Разархивировать',
-              async () => {
-                try {
-                  await updateVacancy(row.getValue('id'), { ...row.original, status: row.getValue('status') ? 0 : 1 })
-                  await fetchVacancies()
-                      .then(() => {
-                        toast.add({
-                          title: row.getValue('status') ? 'Архивировано' : 'Разархивировано',
-                          description: `Вакансия ${row.getValue('status') ? 'заархивирована' : 'разархивирована'}`,
-                          color: 'success'
+                async () => {
+                  try {
+                    await updateVacancy(row.getValue('id'), { ...row.original, status: row.getValue('status') ? 0 : 1 })
+                    await fetchVacancies()
+                        .then(() => {
+                          toast.add({
+                            title: row.getValue('status') ? 'Архивировано' : 'Разархивировано',
+                            description: `Вакансия ${row.getValue('status') ? 'заархивирована' : 'разархивирована'}`,
+                            color: 'success'
+                          })
                         })
-                      })
-                      .then(async () => {
-                        await getVacanciesStats()
-                            .then((response: any) => {
-                              stats.value = response
-                            })
-                      })
+                        .then(async () => {
+                          await getVacanciesStats()
+                              .then((response: any) => {
+                                stats.value = response
+                              })
+                        })
 
-                } catch (error) {
-                  toast.add({
-                    title: 'Ошибка',
-                    description: 'Не удалось архивировать',
-                    color: 'error'
-                  })
+                  } catch (error) {
+                    toast.add({
+                      title: 'Ошибка',
+                      description: 'Не удалось архивировать',
+                      color: 'error'
+                    })
+                  }
                 }
-              }
             )
           }
-        }, {
+        })
+      }
+
+      if (canDeleteVacancies.value) {
+        dangerousActions.push({
           label: 'Удалить',
           icon: 'i-lucide-trash',
-          click: () => {
+          onClick: () => {
             confirm(
               'Удаление вакансии',
               `Вы уверены, что хотите удалить вакансию "${row.getValue('title')}"? Это действие нельзя отменить.`,
@@ -196,8 +211,12 @@ const columns: TableColumn<object>[] = [
               }
             )
           }
-        }]
-      ]
+        })
+      }
+
+      if (dangerousActions.length > 0) {
+        items.push(dangerousActions)
+      }
 
       return h('div', { class: 'flex justify-end' }, [
         h(UDropdownMenu, { items }, {
@@ -223,24 +242,25 @@ const stats = ref({
 })
 
   onMounted(async () => {
-    try {
-      const response = await getVacanciesStats()
-      stats.value = (response as any).data || response
-    } catch (error) {
-      toast.add({
-        title: 'Ошибка',
-        description: 'Не удалось получить статистику',
-        color: 'error'
-      })
-    }
-
-    // Показываем уведомление о демо режиме
     if (isDemoUser.value) {
-      const notification = getDemoNotification()
+      const notification = getDemoNotification() as any
       toast.add(notification)
     }
+    if (canViewStats.value) {
+      try {
+        const response = await getVacanciesStats()
+        stats.value = (response as any).data || response
+      } catch (error) {
+        if ((error as any)?.status !== 403) {
+          toast.add({
+            title: 'Ошибка',
+            description: 'Не удалось получить статистику',
+            color: 'error'
+          })
+        }
+      }
+    }
   })
-
 definePageMeta({
   middleware: 'demo'
 })
@@ -253,16 +273,16 @@ useHead({
 <template>
   <div class="min-w-screen min-h-screen p-4">
     <UAlert
-      v-if="isDemoUser"
-      icon="i-lucide-info"
-      color="info"
-      variant="subtle"
-      title="Демо режим активен"
-      description="Вы используете демо версию с правами менеджера. Все функции доступны для тестирования. Данные являются тестовыми."
-      class="mb-6"
-      :actions="[{
+        v-if="isDemoUser"
+        icon="i-lucide-info"
+        color="info"
+        variant="subtle"
+        title="Демо режим активен"
+        description="Вы используете демо версию с правами менеджера. Все функции доступны для тестирования. Данные являются тестовыми."
+        class="mb-6"
+        :actions="[{
         label: 'Войти под своим аккаунтом',
-        click: () => router.push('/login')
+        onClick: () => router.push('/login')
       }]"
     />
     <div class="mb-6 flex justify-between items-center">
@@ -270,7 +290,7 @@ useHead({
       <UserInfo />
     </div>
 
-    <template v-if="stats">
+    <template v-if="stats && canViewStats">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="bg-card rounded-lg p-4 border">
           <div class="text-2xl font-bold text-primary">{{ stats.total || 0 }}</div>
@@ -299,7 +319,7 @@ useHead({
             icon="i-lucide-plus"
             @click="router.push('/demo/create')"
           >
-            Создать демо вакансию
+            Создать вакансию
           </UButton>
         </div>
       </template>

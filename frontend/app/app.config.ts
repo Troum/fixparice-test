@@ -1,5 +1,5 @@
 export default defineAppConfig({
-  
+
   ui: {
     colors: {
       primary: 'emerald',
@@ -7,9 +7,32 @@ export default defineAppConfig({
     },
     button: {
       defaultVariants: {
-        
-        
+
+
       }
+    },
+    textarea: {
+      slots: {
+        root: 'w-full',
+      },
+    },
+    select: {
+      slots: {
+        root: 'relative inline-flex items-center h-[44px]',
+        base: [
+          'w-full h-[44px] rounded-xl border-0 placeholder:text-dimmed focus:outline-none disabled:cursor-not-allowed disabled:opacity-75',
+          'transition-colors'
+        ],
+      },
+    },
+    inputNumber: {
+      slots: {
+        root: 'relative inline-flex items-center h-[44px]',
+        base: [
+          'w-full h-[44px] rounded-xl border-0 placeholder:text-dimmed focus:outline-none disabled:cursor-not-allowed disabled:opacity-75',
+          'transition-colors'
+        ],
+      },
     },
     input: {
       slots: {

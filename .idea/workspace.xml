@@ -6,6 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="d90fac85-63f3-4739-92cd-db51f29dd3d0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/config/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/web.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/m250901_184435_create_vacancy_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/migrations/m250901_184435_create_vacancy_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/m250901_184436_add_status_to_vacancy_table.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models/Vacancy.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models/Vacancy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/modules/api/modules/v1/controllers/VacancyApiController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/modules/api/modules/v1/controllers/VacancyApiController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/repositories/VacancyRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/repositories/VacancyRepository.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,39 +146,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Docker.docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/ruslanbelchenkov/Backend/testfixprice/frontend/app/pages&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.editor&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/ruslanbelchenkov/Backend/testfixprice/frontend/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/Users/ruslanbelchenkov/Backend/testfixprice/frontend/app/pages/demo/temporary",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "configurable.group.editor",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/Users/ruslanbelchenkov/Backend/testfixprice/frontend/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;vue.recent.templates&quot;: [
-      &quot;Vue Composition API Component&quot;
+  "keyToStringList": {
+    "vue.recent.templates": [
+      "Vue Composition API Component"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/frontend/app/pages/demo/temporary" />
       <recent name="$PROJECT_DIR$/frontend/app/pages" />
       <recent name="$PROJECT_DIR$/frontend/app/composable" />
       <recent name="$PROJECT_DIR$/frontend/app" />
       <recent name="$PROJECT_DIR$/frontend/app/composables" />
-      <recent name="$PROJECT_DIR$/frontend/app/interfaces" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/docker" />
@@ -224,6 +230,9 @@
       <workItem from="1756815080069" duration="26909000" />
       <workItem from="1756862925835" duration="9185000" />
       <workItem from="1756917860764" duration="5422000" />
+      <workItem from="1756986152227" duration="3786000" />
+      <workItem from="1756990472067" duration="6444000" />
+      <workItem from="1756999159934" duration="2358000" />
     </task>
     <servers />
   </component>

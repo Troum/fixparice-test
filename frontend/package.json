@@ -11,12 +11,20 @@
   },
   "dependencies": {
     "@nuxt/ui": "^3.3.3",
-    "nuxt": "^4.0.3",
     "@pinia/nuxt": "^0.11.0",
+    "@tiptap/extension-placeholder": "^3.3.1",
+    "@tiptap/starter-kit": "^3.3.1",
+    "@tiptap/static-renderer": "^3.3.1",
+    "@tiptap/vue-3": "^3.3.1",
+    "dompurify": "^3.2.6",
+    "nuxt": "^4.0.3",
     "pinia-plugin-persistedstate": "^4.2.0",
-    "yup": "^1.6.1",
     "typescript": "^5.9.2",
     "vue": "^3.5.20",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "yup": "^1.6.1"
+  },
+  "devDependencies": {
+    "sass-embedded": "^1.92.0"
   }
 }

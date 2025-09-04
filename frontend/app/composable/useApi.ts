@@ -99,9 +99,9 @@ export function useApi() {
         return await get('vacancies/stats', true)
     }
 
-    async function getVacancy(id: string | number, expand?: string) {
-        const params = expand ? `?expand=${expand}` : ''
-        return await get(`vacancies/${id}${params}`, true)
+    async function getVacancy(id: string | number, expand?: string[]) {
+        const expandParam = expand ? expand.join(',') : 'location,skills,benefits,responsibilities'
+        return await get(`vacancies/${id}?expand=${expandParam}`, true)
     }
 
     async function createVacancy(data: Record<string, unknown>) {
@@ -114,6 +114,29 @@ export function useApi() {
 
     async function deleteVacancy(id: string | number) {
         return await del(`vacancies/${id}`, true)
+    }
+
+    // Справочники
+    async function getLocations() {
+        return await get('locations', false)
+    }
+
+    async function getSkills(category?: string) {
+        const params = category ? `?category=${category}` : ''
+        return await get(`skills${params}`, false)
+    }
+
+    async function getSkillCategories() {
+        return await get('skills/categories', false)
+    }
+
+    async function getBenefits(type?: string) {
+        const params = type ? `?type=${type}` : ''
+        return await get(`benefits${params}`, false)
+    }
+
+    async function getBenefitTypes() {
+        return await get('benefits/types', false)
     }
 
     const usePaginatedData = <T = any>(endpoint: string, requiresAuth: boolean = false) => {
@@ -170,11 +193,19 @@ export function useApi() {
         patch,       // Основной метод обновления
         delete: del,
         usePaginatedData,
+        // Вакансии
         getVacanciesStats,
         getVacancy,
         createVacancy,
         updateVacancy,
         deleteVacancy,
+        // Справочники
+        getLocations,
+        getSkills,
+        getSkillCategories,
+        getBenefits,
+        getBenefitTypes,
+        // Авторизация
         refresh,
         tokens
     }

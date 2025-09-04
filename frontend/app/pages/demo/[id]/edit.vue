@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { useApi } from '~/composable/useApi'
-import JobForm from '~/components/JobForm.vue'
+import type { VacancyInterface, VacancyFormData } from '~/interfaces/VacancyInterface'
+import {useApi} from "~/composable/useApi";
 
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 const { getVacancy, updateVacancy } = useApi()
 
-const id = route.params.id as string
+const id = parseInt(route.params.id as string)
 
-const vacancy = ref()
+const vacancy = ref<VacancyInterface | null>(null)
 const loading = ref(false)
 const fetchLoading = ref(true)
-const error = ref(null)
+const error = ref<string | null>(null)
 
 const fetchVacancy = async () => {
   fetchLoading.value = true
   error.value = null
 
   try {
-    vacancy.value = await getVacancy(id)
+    vacancy.value = await getVacancy(id) as VacancyInterface
   } catch (err: any) {
-    error.value = err
+    error.value = err.message || 'Не удалось загрузить вакансию'
     toast.add({
       title: 'Ошибка',
       description: 'Не удалось загрузить данные вакансии',
@@ -32,7 +32,7 @@ const fetchVacancy = async () => {
   }
 }
 
-const handleSubmit = async (formData: any) => {
+const handleSubmit = async (formData: VacancyFormData) => {
   loading.value = true
 
   try {
@@ -73,10 +73,19 @@ const handleCancel = () => {
   router.push(`/demo/${id}`)
 }
 
+// Загружаем данные при монтировании
 onMounted(() => {
   fetchVacancy()
 })
 
+// Динамический заголовок
+watchEffect(() => {
+  if (vacancy.value?.title) {
+    useHead({
+      title: `Редактирование: ${vacancy.value.title}`
+    })
+  }
+})
 definePageMeta({
   middleware: 'demo'
 })
@@ -88,60 +97,63 @@ useHead({
 
 <template>
   <div class="min-h-screen p-4">
-    <div class="max-w-2xl mx-auto">
+    <div class="max-w-4xl mx-auto">
+      <!-- Навигация -->
       <UAlert
-        icon="i-lucide-edit"
-        color="info"
-        variant="subtle"
-        title="Демо редактирование"
-        description="Редактирование вакансии в демо режиме"
-        class="mb-6"
+          icon="i-lucide-edit"
+          color="info"
+          variant="subtle"
+          title="Демо редактирование"
+          description="Редактирование вакансии в демо режиме"
+          class="mb-6"
       />
 
       <div class="mb-6">
-                <UButton
-          icon="i-lucide-arrow-left"
-          variant="ghost"
-          @click="router.push(`/demo/${id}`)"
+        <UButton
+            icon="i-lucide-arrow-left"
+            variant="ghost"
+            @click="router.push(`/demo/${id}`)"
         >
           Назад к демо вакансии
         </UButton>
       </div>
 
-      <div v-if="fetchLoading" class="flex justify-center items-center py-12">
-        <div class="text-center">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p class="text-gray-600">Загрузка данных вакансии...</p>
-        </div>
-      </div>
+      <!-- Загрузка -->
+      <InlineLoading
+          v-if="loading"
+          message="Загрузка демо вакансии"
+          size="lg"
+      />
 
+      <!-- Ошибка загрузки -->
       <UCard v-else-if="error" class="border-red-200">
         <div class="text-center py-8">
           <div class="text-red-500 mb-4">
             <UIcon name="i-lucide-alert-circle" class="w-12 h-12 mx-auto" />
           </div>
           <h3 class="text-lg font-semibold text-red-700 mb-2">Ошибка загрузки</h3>
-          <p class="text-gray-600 mb-4">Не удалось загрузить данные вакансии для редактирования</p>
+          <p class="text-gray-600 mb-4">{{ error }}</p>
           <div class="space-x-2">
             <UButton @click="fetchVacancy" color="error" variant="outline">
               Попробовать снова
             </UButton>
-            <UButton @click="router.push('/demo')" variant="ghost">
-              К демо списку
+            <UButton @click="router.push('/jobs')" variant="ghost">
+              К списку вакансий
             </UButton>
           </div>
         </div>
       </UCard>
 
+      <!-- Форма редактирования -->
       <div v-else-if="vacancy">
-        <JobForm
-          :initial-data="vacancy"
+        <VacancyForm
+          :vacancy="vacancy"
           :loading="loading"
-          is-edit
           @submit="handleSubmit"
           @cancel="handleCancel"
         />
 
+        <!-- Информация о последнем обновлении -->
         <UCard v-if="vacancy.updated_at" class="mt-6 border-gray-200 bg-gray-50">
           <div class="flex items-center gap-2 text-sm text-gray-600">
             <UIcon name="i-lucide-clock" class="w-4 h-4" />

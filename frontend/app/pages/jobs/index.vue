@@ -20,7 +20,7 @@ const page = ref(Number(route.query.page ?? 1))
 const sort = ref(String(route.query.sort ?? '-created_at'))
 const perPage = 10
 
-const { data, pending, error, fetchData, items, meta } = usePaginatedData('vacancies', true)
+const { pending, fetchData, items, meta } = usePaginatedData('vacancies', true)
 
 const fetchVacancies = async () => {
   await fetchData({

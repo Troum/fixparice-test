@@ -2,6 +2,10 @@
 import type {InferType} from 'yup'
 import * as yup from 'yup'
 import type {FormSubmitEvent} from '@nuxt/ui'
+import TiptapEditorComponent from "~/components/TiptapEditorComponent.vue";
+import {useUtility} from "~/composable/useUtility";
+
+const {validateTiptapContent} = useUtility()
 
 const schema = yup.object({
   title: yup
@@ -10,9 +14,9 @@ const schema = yup.object({
       .min(3, 'Название должно содержать минимум 3 символа')
       .max(255, 'Название не должно превышать 255 символов'),
   description: yup
-      .string()
-      .required('Описание обязательно')
-      .min(10, 'Описание должно содержать минимум 10 символов'),
+      .mixed()
+      .required('Содержимое обязательно')
+      .test('content-validation', 'Содержимое не может быть пустым', validateTiptapContent),
   salary: yup
       .number()
       .required('Зарплата обязательна')
@@ -91,12 +95,12 @@ watch(() => props.initialData, (newData) => {
           </UFormField>
 
           <UFormField label="Описание" name="description" required>
-            <UTextarea
-                class="w-full"
-                v-model="state.description"
-                placeholder="Опишите требования к кандидату, обязанности и условия работы"
-                :rows="6"
-            />
+            <ClientOnly>
+              <TiptapEditorComponent
+                  v-model="state.description"
+                  placeholder="Опишите требования к кандидату, обязанности и условия работы"
+                  min-height="300px"/>
+            </ClientOnly>
           </UFormField>
 
           <UFormField label="Зарплата (₽)" name="salary" required help="Укажите размер заработной платы в рублях">

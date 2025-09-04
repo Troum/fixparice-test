@@ -14,6 +14,7 @@ use yii\db\Exception;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\UnauthorizedHttpException;
 
 class VacancyApiController extends BaseApiController
 {
@@ -22,12 +23,12 @@ class VacancyApiController extends BaseApiController
     public function behaviors(): array
     {
         $behaviors = parent::behaviors();
-        
+
         $behaviors['bearerAuth'] = [
             'class' => BearerAuthFilter::class,
             'except' => ['options'],
         ];
-        
+
         return $behaviors;
     }
 
@@ -37,10 +38,15 @@ class VacancyApiController extends BaseApiController
         $this->vacancyService = ServiceFactory::getVacancyService();
     }
 
+    /**
+     * @throws UnauthorizedHttpException
+     * @throws InvalidConfigException
+     * @throws ForbiddenHttpException
+     */
     public function actionIndex(): array
     {
         $user = $this->validateBearerToken();
-        
+
         if (!Yii::$app->authManager->checkAccess($user->id, 'viewVacancy')) {
             throw new ForbiddenHttpException('Недостаточно прав для просмотра вакансий');
         }
@@ -53,7 +59,7 @@ class VacancyApiController extends BaseApiController
 
         $items = [];
         foreach ($dataProvider->getModels() as $model) {
-            $item = $model->toArray([], $expandFields);
+            $item = $this->formatVacancyForApi($model, $expandFields);
             $items[] = $item;
         }
 
@@ -73,10 +79,15 @@ class VacancyApiController extends BaseApiController
         ];
     }
 
+    /**
+     * @throws UnauthorizedHttpException
+     * @throws NotFoundHttpException
+     * @throws ForbiddenHttpException
+     */
     public function actionView(int $id): array
     {
         $user = $this->validateBearerToken();
-        
+
         if (!Yii::$app->authManager->checkAccess($user->id, 'viewVacancy')) {
             throw new ForbiddenHttpException('Недостаточно прав для просмотра вакансий');
         }
@@ -102,14 +113,19 @@ class VacancyApiController extends BaseApiController
             return $result;
         } else {
             $expandFields = $expand ? explode(',', $expand) : [];
-            return $vacancy->toArray([], $expandFields);
+            return $this->formatVacancyForApi($vacancy, $expandFields);
         }
     }
 
+    /**
+     * @throws UnauthorizedHttpException
+     * @throws InvalidConfigException
+     * @throws ForbiddenHttpException
+     */
     public function actionCreate(): array
     {
         $user = $this->validateBearerToken();
-        
+
         if (!Yii::$app->authManager->checkAccess($user->id, 'createVacancy')) {
             throw new ForbiddenHttpException('Недостаточно прав для создания вакансий');
         }
@@ -132,10 +148,16 @@ class VacancyApiController extends BaseApiController
         ];
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws UnauthorizedHttpException
+     * @throws NotFoundHttpException
+     * @throws ForbiddenHttpException
+     */
     public function actionUpdate(int $id): array
     {
         $user = $this->validateBearerToken();
-        
+
         if (!Yii::$app->authManager->checkAccess($user->id, 'updateVacancy')) {
             throw new ForbiddenHttpException('Недостаточно прав для редактирования вакансий');
         }
@@ -161,10 +183,15 @@ class VacancyApiController extends BaseApiController
         ];
     }
 
+    /**
+     * @throws UnauthorizedHttpException
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
     public function actionDelete(int $id): array
     {
         $user = $this->validateBearerToken();
-        
+
         if (!Yii::$app->authManager->checkAccess($user->id, 'deleteVacancy')) {
             throw new ForbiddenHttpException('Недостаточно прав для удаления вакансий');
         }
@@ -201,10 +228,14 @@ class VacancyApiController extends BaseApiController
         ];
     }
 
+    /**
+     * @throws UnauthorizedHttpException
+     * @throws ForbiddenHttpException
+     */
     public function actionStats(): array
     {
         $user = $this->validateBearerToken();
-        
+
         if (!Yii::$app->authManager->checkAccess($user->id, 'viewStats')) {
             throw new ForbiddenHttpException('Недостаточно прав для просмотра статистики');
         }
@@ -220,5 +251,46 @@ class VacancyApiController extends BaseApiController
             'result' => 'error',
             'errors' => $result['errors']
         ];
+    }
+
+    /**
+     * Форматирование вакансии для API с правильными навыками
+     * @param Vacancy $vacancy
+     * @param array $expandFields
+     * @return array
+     */
+    private function formatVacancyForApi(Vacancy $vacancy, array $expandFields = []): array
+    {
+        $data = $vacancy->toArray([], array_diff($expandFields, ['skills', 'benefits']));
+        
+        // Добавляем навыки с полной информацией если они запрошены
+        if (in_array('skills', $expandFields)) {
+            $data['skills'] = array_map(function($vacancySkill) {
+                return [
+                    'id' => $vacancySkill->skill->id,
+                    'name' => $vacancySkill->skill->name,
+                    'category' => $vacancySkill->skill->category,
+                    'category_name' => $vacancySkill->skill->getCategoryName(),
+                    'required' => (bool)$vacancySkill->required,
+                    'level' => $vacancySkill->level,
+                    'level_name' => $vacancySkill->getLevelName(),
+                ];
+            }, $vacancy->vacancySkills);
+        }
+        
+        // Добавляем льготы с полной информацией если они запрошены
+        if (in_array('benefits', $expandFields)) {
+            $data['benefits'] = array_map(function($vacancyBenefit) {
+                return [
+                    'id' => $vacancyBenefit->benefit->id,
+                    'name' => $vacancyBenefit->benefit->name,
+                    'type' => $vacancyBenefit->benefit->type,
+                    'type_name' => $vacancyBenefit->benefit->getTypeName(),
+                    'value' => $vacancyBenefit->value,
+                ];
+            }, $vacancy->vacancyBenefits);
+        }
+        
+        return $data;
     }
 }

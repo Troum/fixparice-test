@@ -78,6 +78,18 @@ $config = [
                 'OPTIONS api/v1/vacancies' => 'api/v1/vacancy-api/options',
                 'OPTIONS api/v1/vacancies/<id:\d+>' => 'api/v1/vacancy-api/options',
                 'OPTIONS api/v1/vacancies/<action:\w+>' => 'api/v1/vacancy-api/options',
+
+                // Справочники
+                'GET api/v1/locations' => 'api/v1/location-api/index',
+                'GET api/v1/locations/<id:\d+>' => 'api/v1/location-api/view',
+                
+                'GET api/v1/skills' => 'api/v1/skill-api/index',
+                'GET api/v1/skills/<id:\d+>' => 'api/v1/skill-api/view',
+                'GET api/v1/skills/categories' => 'api/v1/skill-api/categories',
+                
+                'GET api/v1/benefits' => 'api/v1/benefit-api/index',
+                'GET api/v1/benefits/<id:\d+>' => 'api/v1/benefit-api/view',
+                'GET api/v1/benefits/types' => 'api/v1/benefit-api/types',
             ],
         ],
     ],
