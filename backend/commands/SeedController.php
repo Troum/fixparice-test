@@ -247,67 +247,65 @@ class SeedController extends Controller
 
         $locations = [
             [
-                [
-                    'name' => 'Москва, Россия',
-                    'country' => 'Россия',
-                    'city' => 'Москва',
-                    'remote_available' => 1,
-                ],
-                [
-                    'name' => 'Санкт-Петербург, Россия',
-                    'country' => 'Россия',
-                    'city' => 'Санкт-Петербург',
-                    'remote_available' => 1,
-                ],
-                [
-                    'name' => 'Новосибирск, Россия',
-                    'country' => 'Россия',
-                    'city' => 'Новосибирск',
-                    'remote_available' => 1,
-                ],
-                [
-                    'name' => 'Екатеринбург, Россия',
-                    'country' => 'Россия',
-                    'city' => 'Екатеринбург',
-                    'remote_available' => 1,
-                ],
-                [
-                    'name' => 'Казань, Россия',
-                    'country' => 'Россия',
-                    'city' => 'Казань',
-                    'remote_available' => 1,
-                ],
-                [
-                    'name' => 'Нижний Новгород, Россия',
-                    'country' => 'Россия',
-                    'city' => 'Нижний Новгород',
-                    'remote_available' => 1,
-                ],
-                [
-                    'name' => 'Челябинск, Россия',
-                    'country' => 'Россия',
-                    'city' => 'Челябинск',
-                    'remote_available' => 1,
-                ],
-                [
-                    'name' => 'Самара, Россия',
-                    'country' => 'Россия',
-                    'city' => 'Самара',
-                    'remote_available' => 1,
-                ],
-                [
-                    'name' => 'Омск, Россия',
-                    'country' => 'Россия',
-                    'city' => 'Омск',
-                    'remote_available' => 1,
-                ],
-                [
-                    'name' => 'Ростов-на-Дону, Россия',
-                    'country' => 'Россия',
-                    'city' => 'Ростов-на-Дону',
-                    'remote_available' => 1,
-                ],
-            ]
+                'name' => 'Москва, Россия',
+                'country' => 'Россия',
+                'city' => 'Москва',
+                'remote_available' => 1,
+            ],
+            [
+                'name' => 'Санкт-Петербург, Россия',
+                'country' => 'Россия',
+                'city' => 'Санкт-Петербург',
+                'remote_available' => 1,
+            ],
+            [
+                'name' => 'Новосибирск, Россия',
+                'country' => 'Россия',
+                'city' => 'Новосибирск',
+                'remote_available' => 1,
+            ],
+            [
+                'name' => 'Екатеринбург, Россия',
+                'country' => 'Россия',
+                'city' => 'Екатеринбург',
+                'remote_available' => 1,
+            ],
+            [
+                'name' => 'Казань, Россия',
+                'country' => 'Россия',
+                'city' => 'Казань',
+                'remote_available' => 1,
+            ],
+            [
+                'name' => 'Нижний Новгород, Россия',
+                'country' => 'Россия',
+                'city' => 'Нижний Новгород',
+                'remote_available' => 1,
+            ],
+            [
+                'name' => 'Челябинск, Россия',
+                'country' => 'Россия',
+                'city' => 'Челябинск',
+                'remote_available' => 1,
+            ],
+            [
+                'name' => 'Самара, Россия',
+                'country' => 'Россия',
+                'city' => 'Самара',
+                'remote_available' => 1,
+            ],
+            [
+                'name' => 'Омск, Россия',
+                'country' => 'Россия',
+                'city' => 'Омск',
+                'remote_available' => 1,
+            ],
+            [
+                'name' => 'Ростов-на-Дону, Россия',
+                'country' => 'Россия',
+                'city' => 'Ростов-на-Дону',
+                'remote_available' => 1,
+            ],
         ];
 
         foreach ($locations as $location) {
