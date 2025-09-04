@@ -13,6 +13,7 @@ if (YII_ENV_DEV) {
         //'schemaCache' => 'cache',
     ];
 }
+
 return [
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=localhost;dbname=vacancy_db',

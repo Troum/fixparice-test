@@ -2,6 +2,7 @@
 
 namespace app\commands;
 
+use app\models\Location;
 use app\models\UserEntity;
 use yii\console\Controller;
 use yii\console\ExitCode;
@@ -234,5 +235,107 @@ class SeedController extends Controller
             $this->stdout("Неверный пароль" . PHP_EOL, BaseConsole::FG_RED);
             return ExitCode::UNSPECIFIED_ERROR;
         }
+    }
+
+    /**
+     * @return int
+     * @throws Exception|BaseException
+     */
+    public function actionLocation(): int
+    {
+        $this->stdout("Создание локаций..." . PHP_EOL, BaseConsole::FG_GREEN);
+
+        $locations = [
+            [
+                [
+                    'name' => 'Москва, Россия',
+                    'country' => 'Россия',
+                    'city' => 'Москва',
+                    'remote_available' => 1,
+                ],
+                [
+                    'name' => 'Санкт-Петербург, Россия',
+                    'country' => 'Россия',
+                    'city' => 'Санкт-Петербург',
+                    'remote_available' => 1,
+                ],
+                [
+                    'name' => 'Новосибирск, Россия',
+                    'country' => 'Россия',
+                    'city' => 'Новосибирск',
+                    'remote_available' => 1,
+                ],
+                [
+                    'name' => 'Екатеринбург, Россия',
+                    'country' => 'Россия',
+                    'city' => 'Екатеринбург',
+                    'remote_available' => 1,
+                ],
+                [
+                    'name' => 'Казань, Россия',
+                    'country' => 'Россия',
+                    'city' => 'Казань',
+                    'remote_available' => 1,
+                ],
+                [
+                    'name' => 'Нижний Новгород, Россия',
+                    'country' => 'Россия',
+                    'city' => 'Нижний Новгород',
+                    'remote_available' => 1,
+                ],
+                [
+                    'name' => 'Челябинск, Россия',
+                    'country' => 'Россия',
+                    'city' => 'Челябинск',
+                    'remote_available' => 1,
+                ],
+                [
+                    'name' => 'Самара, Россия',
+                    'country' => 'Россия',
+                    'city' => 'Самара',
+                    'remote_available' => 1,
+                ],
+                [
+                    'name' => 'Омск, Россия',
+                    'country' => 'Россия',
+                    'city' => 'Омск',
+                    'remote_available' => 1,
+                ],
+                [
+                    'name' => 'Ростов-на-Дону, Россия',
+                    'country' => 'Россия',
+                    'city' => 'Ростов-на-Дону',
+                    'remote_available' => 1,
+                ],
+            ]
+        ];
+
+        foreach ($locations as $location) {
+            $existingLocation= Location::find()
+                ->where(['or', ['name' => $location['name']], ['city' => $location['city']]])
+                ->one();
+
+            if ($existingLocation) {
+                $this->stdout("- {$location['name']} уже существует" . PHP_EOL, BaseConsole::FG_YELLOW);
+                continue;
+            }
+
+            $loc = new Location();
+            $loc->name = $location['name'];
+            $loc->city = $location['city'];
+            $loc->remote_available = $location['remote_available'];
+            $loc->country = $location['country'];
+
+            if ($loc->save()) {
+                $this->stdout("{$location['name']} создана" . PHP_EOL, BaseConsole::FG_GREEN);
+            } else {
+                $this->stdout("Ошибка при создании локации {$location['name']}: " . json_encode($loc->errors) . PHP_EOL, BaseConsole::FG_RED);
+                return ExitCode::UNSPECIFIED_ERROR;
+            }
+        }
+
+        $this->stdout("Добавление локаций завершено!" . PHP_EOL, BaseConsole::FG_GREEN);
+
+        return ExitCode::OK;
     }
 }
